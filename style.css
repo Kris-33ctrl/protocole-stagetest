@@ -1,0 +1,319 @@
+/* --- CONFIGURATION DE BASE --- */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #050505;
+    font-family: 'Courier New', Courier, monospace;
+    color: #e0e0e0;
+    user-select: none;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    position: relative;
+}
+
+/* Fond grille holographique */
+canvas#gameCanvas {
+    display: block;
+    cursor: none;
+    background-color: #050505;
+    background-image:
+        linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+}
+
+/* --- DASHBOARD À DROITE --- */
+#ui-layer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 300px;
+    background: rgba(10, 15, 20, 0.9);
+    border-left: 2px solid #00e5ff;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 5;
+    overflow-y: auto;
+}
+
+.panel {
+    border: 1px solid #333;
+    background: #0f1215;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+h3 {
+    color: #00e5ff;
+    margin-top: 0;
+    border-bottom: 1px solid #00e5ff;
+    padding-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+/* JAUGE DE DETECTION */
+.meter-container {
+    height: 20px;
+    background: #222;
+    border: 1px solid #555;
+    position: relative;
+    margin: 10px 0;
+}
+
+#jerk-meter-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #0be881, #ff3f34);
+    transition: width 0.1s;
+}
+
+#alert-msg {
+    font-size: 0.8rem;
+    color: #ff3f34;
+    font-weight: bold;
+    text-align: center;
+    visibility: hidden;
+}
+
+/* FEEDBACK TEMPS RÉEL */
+#speed-feedback {
+    background: #0a0a0a;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.feedback-line {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+    padding: 3px 0;
+}
+
+.feedback-line .label {
+    color: #888;
+}
+
+#current-speed,
+#target-speed,
+#speed-error {
+    font-weight: bold;
+    color: #00e5ff;
+}
+
+#speed-error {
+    color: #ff3f34;
+}
+
+/* --- MENUS ET OVERLAYS --- */
+#game-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.card {
+    background: #0f1215;
+    padding: 40px;
+    border: 2px solid #00e5ff;
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+    text-align: center;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    z-index: 101;
+}
+
+.hidden {
+    display: none !important;
+}
+
+h1 {
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+}
+
+.blue-text {
+    color: #00e5ff;
+}
+
+.red-text {
+    color: #ff3f34;
+}
+
+button {
+    background: transparent;
+    color: #00e5ff;
+    border: 2px solid #00e5ff;
+    padding: 15px 40px;
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-top: 20px;
+    margin-right: 10px;
+}
+
+button:hover {
+    background: #00e5ff;
+    color: #000;
+}
+
+.button-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* --- GRAPHIQUES DE RESULTATS --- */
+
+.graph-container-main {
+    background: #000;
+    border: 1px solid #333;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.graphs-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.sub-graph {
+    background: #050505;
+    border: 1px solid #222;
+    padding: 5px;
+    width: 32%;
+}
+
+.sub-graph h4,
+.graph-container-main h3 {
+    color: #888;
+    font-size: 0.8rem;
+    margin: 0 0 5px 0;
+    text-transform: uppercase;
+}
+
+.sub-graph .metric {
+    color: #00e5ff;
+    font-size: 0.75rem;
+    margin: 5px 0 0 0;
+    text-align: center;
+}
+
+canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* --- PANNEAU MÉTRIQUES --- */
+#metrics-panel {
+    background: #0a0a0a;
+    border: 2px solid #333;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+
+#metrics-panel h3 {
+    color: #0be881;
+    text-align: center;
+    border-bottom: 2px solid #0be881;
+    padding-bottom: 10px;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.metric-box {
+    background: #0f1215;
+    border: 1px solid #333;
+    padding: 15px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.metric-label {
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #00e5ff;
+}
+
+#analysis-text {
+    background: #0a0a0a;
+    padding: 20px;
+    border-left: 3px solid #00e5ff;
+    margin: 20px 0;
+    text-align: left;
+    white-space: pre-line;
+    line-height: 1.6;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 900px) {
+    .graphs-row {
+        flex-direction: column;
+    }
+
+    .sub-graph {
+        width: 100%;
+    }
+
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #ui-layer {
+        width: 250px;
+    }
+}
+
+@media (max-width: 600px) {
+    #ui-layer {
+        display: none;
+    }
+
+    .card {
+        padding: 20px;
+        max-width: 90%;
+    }
+}

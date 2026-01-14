@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocole: StageTest</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="ui-layer">
+        <div id="dashboard">
+            <div class="panel">
+                <h3>ANALYSE (Jerk)</h3>
+                <div class="meter-container">
+                    <div id="jerk-meter-fill"></div>
+                    <span id="jerk-label">ROBOTIQUE</span>
+                </div>
+                <p id="alert-msg">SCAN...</p>
+            </div>
+
+            <div class="panel">
+                <h3>VITESSE (t)</h3>
+                <canvas id="miniGraph" width="200" height="100"></canvas>
+            </div>
+
+            <div class="panel">
+                <h3>ÉCART TEMPS RÉEL</h3>
+                <div id="speed-feedback">
+                    <div class="feedback-line">
+                        <span class="label">Vitesse:</span>
+                        <span id="current-speed">0.00</span>
+                    </div>
+                    <div class="feedback-line">
+                        <span class="label">Objectif:</span>
+                        <span id="target-speed">0.25</span>
+                    </div>
+                    <div class="feedback-line">
+                        <span class="label">Écart:</span>
+                        <span id="speed-error">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>MISSION</h3>
+                <div id="phase-indicator">ATTENTE</div>
+                <div id="timer-display" style="font-size: 2rem; color:white;">00:00</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-overlay">
+
+        <div class="card" id="card-intro">
+            <h1 class="glitch">Protocole: StageTest</h1>
+            <p>
+                <strong>MISSION DE CALIBRAGE</strong><br><br>
+                <span class="blue-text">PHASE 1 (30 sec) : ESCORTE</span><br>
+                Un drone guide va apparaître. Il se déplace à <strong>VITESSE CONSTANTE</strong>.<br>
+                Suivez-le avec votre souris sans le dépasser ni traîner.<br>
+                <em>C'est l'épreuve de rigidité robotique.</em><br><br>
+
+                <span class="red-text">PHASE 2 (20 sec) : SURCHARGE</span><br>
+                Le système va s'emballer. Détruisez les cibles rouges le plus vite possible.<br>
+
+            </p>
+            <button id="btn-start">LANCER LE PROTOCOLE</button>
+        </div>
+
+        <div class="card hidden" id="card-result" style="max-width: 900px;">
+            <h1>ANALYSE COMPARATIVE</h1>
+
+            <div class="graph-container-main">
+                <h3>SUPERPOSITION (Vitesse / Temps normalisé)</h3>
+                <canvas id="mainGraph" width="800" height="250"></canvas>
+            </div>
+
+            <div class="graphs-row">
+                <div class="sub-graph">
+                    <h4>THÉORIE ROBOT</h4>
+                    <canvas id="subGraph1" width="250" height="150"></canvas>
+                </div>
+                <div class="sub-graph">
+                    <h4>PHASE 1 (Infiltration)</h4>
+                    <canvas id="subGraph2" width="250" height="150"></canvas>
+                </div>
+                <div class="sub-graph">
+                    <h4>PHASE 2 (Naturel)</h4>
+                    <canvas id="subGraph3" width="250" height="150"></canvas>
+                </div>
+            </div>
+
+            <div id="metrics-panel">
+                <h3>📊 DÉTECTION D'ERREURS MOTRICES</h3>
+                <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr);">
+
+                    <div class="metric-box" style="border-color: #00e5ff;">
+                        <div class="metric-label">ROBOT (Attendu)</div>
+                        <div class="metric-value" id="corrections-robot" style="color: #00e5ff;">0</div>
+                        <div style="font-size:0.7rem; color:#666;">Zéro hésitation</div>
+                    </div>
+
+                    <div class="metric-box" style="border-color: #ff3f34;">
+                        <div class="metric-label">PHASE 1 (Vous)</div>
+                        <div class="metric-value" id="corrections-phase1" style="color: #ff3f34;">--</div>
+                        <div style="font-size:0.7rem; color:#666;">Conflit cognitif</div>
+                    </div>
+
+                    <div class="metric-box" style="border-color: #0be881;">
+                        <div class="metric-label">PHASE 2 (Vous)</div>
+                        <div class="metric-value" id="corrections-phase2" style="color: #0be881;">--</div>
+                        <div style="font-size:0.7rem; color:#666;">Fluidité naturelle</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="analysis-text" style="margin-top:20px;"></div>
+
+            <div class="button-row">
+                <button onclick="location.reload()">RECALIBRER</button>
+                <button id="btn-learn-more">EN SAVOIR PLUS</button>
+            </div>
+        </div>
+
+        <div class="card hidden" id="card-science" style="max-width: 800px;">
+            <h1>📚 APPLICATIONS SCIENTIFIQUES</h1>
+            <div style="text-align: left; padding: 20px;">
+                <h3 class="blue-text">Le Fondement Théorique</h3>
+                <ul style="color: #e0e0e0; list-style-type: none; padding-left: 0;">
+                    <li style="margin-bottom: 15px;">
+                        <strong>1. Le Minimum Jerk :</strong><br>
+                        <span style="color:#aaa; font-size:0.9rem;">Flash & Hogan (1985) et Khamassi & Pacherie (2018)
+                            expliquent que le cerveau lisse naturellement les trajectoires pour économiser l'énergie.
+                            Cette signature biologique en "cloche" est impossible à masquer totalement.</span>
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <strong>2. Phase 1 : Le Feedback (Lent) :</strong><br>
+                        <span style="color:#aaa; font-size:0.9rem;">Pour imiter le robot, votre cerveau corrige l'erreur
+                            visuelle en temps réel (boucle fermée). Ce contrôle conscient est instable et crée les
+                            tremblements de la courbe rouge.</span>
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <strong>3. Phase 2 : Le Feedforward (Fluide) :</strong><br>
+                        <span style="color:#aaa; font-size:0.9rem;">Dans l'urgence, le cerveau anticipe le mouvement
+                            grâce à des modèles internes (boucle ouverte). Ce mode balistique produit la fluidité
+                            naturelle de la courbe verte.</span>
+                    </li>
+                </ul>
+
+                <h3 class="red-text">Pourquoi étudier ces courbes ?</h3>
+                <ul style="color: #e0e0e0; list-style-type: none; padding-left: 0;">
+                    <li style="margin-bottom: 15px;">
+                        <strong>1. Rééducation Post-AVC :</strong><br>
+                        <span style="color:#aaa; font-size:0.9rem;">Après un accident vasculaire, les patients repassent
+                            en contrôle visuel (courbe rouge). L'objectif est de réapprendre la planification fluide
+                            (courbe verte) pour regagner en autonomie.</span>
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <strong>2. Diagnostic Précoce en Neurologie :</strong><br>
+                        <span style="color:#aaa; font-size:0.9rem;">L'analyse fine de la cinématique permet de détecter
+                            des micro-tremblements ou des pertes de fluidité (signes de défaillance des modèles
+                            internes) bien avant les symptômes cliniques visibles.</span>
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <strong>3. Interaction Homme-Robot & Action Conjointe :</strong><br>
+                        <span style="color:#aaa; font-size:0.9rem;">Pour collaborer efficacement, un robot doit être
+                            "lisible". En lui appliquant des profils de vitesse humains (Minimum Jerk), on rend ses
+                            mouvements prévisibles et acceptables pour l'homme.</span>
+                    </li>
+                    <li style="margin-bottom: 15px;">
+                        <strong>4. Prothèses Bioniques :</strong><br>
+                        <span style="color:#aaa; font-size:0.9rem;">Les prothèses modernes intègrent ces algorithmes de
+                            lissage pour éviter les mouvements robotiques saccadés, réduisant la charge mentale et
+                            l'effort de l'utilisateur.</span>
+                    </li>
+                </ul>
+            </div>
+            <button
+                onclick="document.getElementById('card-science').classList.add('hidden'); document.getElementById('card-result').classList.remove('hidden');">RETOUR
+                À L'ANALYSE</button>
+        </div>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+    <script src="script.js"></script>
+</body>
+
+</html>
